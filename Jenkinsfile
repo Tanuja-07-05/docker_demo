@@ -10,21 +10,13 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t tanuja77/myapp:v2 .'
+                bat 'docker build -t myapp .'
             }
         }
 
-        stage('Login to Docker Hub') {
+        stage('Run Container') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
-                    sh 'echo $PASS | docker login -u $USER --password-stdin'
-                }
-            }
-        }
-
-        stage('Push to Docker Hub') {
-            steps {
-                sh 'docker push tanuja77/myapp:v2'
+                bat 'docker run -d -p 8083:80 myapp'
             }
         }
     }
